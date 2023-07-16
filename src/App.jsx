@@ -2,67 +2,78 @@ import React, { StrictMode, useState } from 'react'
 import {createRoot} from 'react-dom/client';
 import Current from './components/current';
 import TwelveHour from './components/twelveHours';
+import Charts from './components/chart'
 import Location from './call.mjs'
+import * as data from './data.mjs'
 
 class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             currentData: null,
+            chartData: null,
             twelveHourData: null
         };
         this.style = {
-            center: {
+            app: {
                 'display': 'flex',
-                'flexDirection': 'row',
+                'flexDirection': 'column',
                 'justifyContent': 'center',
                 'height': '100%',
-                'width': '100%'
+                'width': '100%',
+                'fontFamily': ['lato', 'Arial', 'Helvetica', 'sansSerif']
+            },
+            center: {
+                'display': 'flex',
             },
             panel: {
                 'display': 'flex',
                 'width': '20%',
                 'height': '100%'
             },
-
             main: {
-                'alignItems': 'center',
                 'display': 'flex',
+                'alignItems': 'center',
                 'flexDirection': 'column',
                 'gap': '5em',
-                'marginBottom': '5em'
             }
         };
     };
     async componentDidMount() {
-        const location = new Location();
         try {
+            const location = new Location();
             let response = await location.get();
-            const currentData = await location.hourly(response);
-            const twelveHourData = await location.daily(response);
+            await response.call();
+            let chartData = new data.ChartData(response.hourly);
+            let currentData = new data.CurrentData(response.hourly)
+            let twelveHourData = new data.EveryTwelveHourData(response.daily)
+            chartData = chartData.create()
+            twelveHourData = twelveHourData.create()
             this.setState({
                 currentData,
+                chartData,
                 twelveHourData
             });
-        } catch (error) {
-            console.log(error);
-        }
-    }
+        } catch (error) { console.log(error) };
+    };
     render() {
-
-        const { currentData, twelveHourData } = this.state;
-        const style = this.style;
-
-        return (
-            <div style={style.center}>
-                <div style={style.panel} />
-                <main style={style.main}>
-                    <Current id="current" data={currentData} />
-                    <TwelveHour id="twelveHour" data={twelveHourData} />
-                </main>
-                <div style={style.panel} />
-            </div>
-        );
+        try {
+            const { currentData, twelveHourData, chartData } = this.state;
+            const style = this.style;
+            return (
+                <div style={style.app}>
+                    <div style={style.center}>
+                        <div style={style.panel} />
+                        <main style={style.main}>
+                            <Current id="current" data={currentData} />
+                            <Charts id='chart' data={chartData} />
+                            <TwelveHour id="twelveHour" data={twelveHourData} />
+                        </main>
+                        <div style={style.panel} />
+                    </div>
+                </div>
+            );
+        } catch (error) { console.log(error) };
     };
 };
 
@@ -72,5 +83,3 @@ root.render(
         <App />
     </StrictMode>
 );
-
-export default App;

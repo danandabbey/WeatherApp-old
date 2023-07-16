@@ -1,29 +1,11 @@
 'use strict'
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-
-const Menu = (() => {
-
-    let loc = ((url) => {
-        window.location.href = `${url}.html`;
-    })
-
-    let control = (() => {
-        let hidden = document.getElementById('hidden');
-        if (hidden.style.display === 'flex') {
-            hidden.style.display = 'none'
-        } else {
-            hidden.style.display = 'flex'
-        }
-    });
-
     class Navigation extends React.Component {
         constructor(props) {
             super(props)
-        }
-        render() {
-            const button = {
+            this.style = {
+                button:{
                 'gap': '1em',
                 'padding-bottom': '5em',
                 'justify-self': 'center',
@@ -31,9 +13,8 @@ const Menu = (() => {
                 'border': 'none',
                 'text-align': 'center',
                 'font-size': '1.5em'
-
-            }
-            const navStyle = {
+                },
+                nav:{
                 'display': 'flex',
                 'flex-direction': 'column-reverse',
                 'gap': '1em',
@@ -43,36 +24,44 @@ const Menu = (() => {
                 'font-size': '1.5em',
                 'align-self': 'flex-end',
                 'text-align': 'center'
-            }
-            const menuStyle = {
+                },
+                menu:{
                 'width': '100%',
                 'font-size': '1.5em',
                 'align-self': 'flex-end',
                 'text-align': 'center',
                 'display': 'inline'
-
-            }
-            const hiddenStyle = {
+                },
+                hidden:{
                 'flex- direction': 'column',
                 'gap': '.5em',
                 'display': 'none'
             }
-
+            }
+        }
+            loc(url){
+        window.location.href = `${url}.html`;
+        };
+        control(){
+        if (this.style.hidden.display === 'flex') {
+            this.style.hidden.display = 'none'
+        } else {
+            this.style.hidden.display = 'flex'
+        }
+        };
+        render() {
+            const style = this.style;
             return (
-                <nav style={navStyle}>
-                    <div style={menuStyle} onClick={control}>Menu</div>
-                    <div id='hidden' style={hiddenStyle}>
-                        <button style={button} onClick={loc('index')}>Home</button>
-                        <button style={button} onClick={loc('about')}>About</button>
-                        <button style={button} onClick={loc('projects')}>Projects</button>
+                <nav style={style.nav}>
+                    <div style={style.menu} onClick={this.control}>Menu</div>
+                    <div id='hidden' style={style.hidden}>
+                        <button style={style.button} onClick={this.loc('index')}>Home</button>
+                        <button style={style.button} onClick={this.loc('about')}>About</button>
+                        <button style={style.button} onClick={this.loc('projects')}>Projects</button>
                     </div>
                 </nav>
             )
         };
-    };
-
-let x = document.getElementById('menu');
-ReactDOM.render(<Navigation />, x);
-});
-
-export default { Menu };
+};
+    
+export default Navigation;

@@ -1,5 +1,3 @@
-import * as data from "./data.mjs"
-
 class Location {
     constructor() {
         this.options = { enableHighAccuracy: true };
@@ -23,23 +21,31 @@ class Location {
             console.log(`Error: ${error.code} Message: ${error.message}`);
         };
     };
-    async call(lat,lon) {
-        let response = await fetch(`https://api.weather.gov/points/${lat},${lon}`)
-            .then((value) => value.json());
-        return response
+    async call(lat, lon) {
+        try {
+            let response = await fetch(`https://api.weather.gov/points/${lat},${lon}`)
+                .then((value) => value.json());
+            return new Data(response);
+        } catch (error) {
+            console.log(`Error: ${error.code} Message: ${error.message}`);
+        }
     };
-    async hourly(response) {
-        let hourly = response[`properties`][`forecastHourly`];
-        const current = await fetch(hourly).then((response) => response.json());
-        const x = new data.CurrentData(current);
-        return x;
+};
+
+class Data {
+    constructor(response) {
+        this.response = response;
     };
-    async daily(response) {
-        let daily = response[`properties`][`forecast`];
-        const twelveHour = await fetch(daily).then((response) => response.json());
-        const x = new data.EveryTwelveHourData(twelveHour.properties.periods);
-        x.create()
-        return x.list;
+    async call() {
+        try {
+            let hourly = this.response[`properties`][`forecastHourly`];
+            let daily = this.response[`properties`][`forecast`];
+            this.daily = await fetch(daily).then((response) => response.json());
+            this.hourly = await fetch(hourly).then((response) => response.json());
+            return this;
+        } catch (error) {
+            console.log(`Error: ${error.code} Message: ${error.message}`);
+        }
     };
 };
 

@@ -22,18 +22,18 @@ class CurrentData {
         let minutes = new Date().getMinutes();
         if (minutes > 30) {
             if (minutes > 45) {
-                return ((hourOne * 1) + (hourTwo * 3)) / 4
+                return (Math.round((hourOne * 1) + (hourTwo * 3) / 4))
             } else {
-                return ((hourOne * 1) + (hourTwo * 2)) / 3
+                return (Math.round(((hourOne * 1) + (hourTwo * 2)) / 3))
             }
         } else if (minutes < 30) {
             if (minutes < 15) {
-                return ((hourOne * 3) + (hourTwo * 1)) / 4
+                return (Math.round(((hourOne * 3) + (hourTwo * 1)) / 4))
             } else {
-                return ((hourOne * 2) + (hourTwo * 1)) / 3
+                return (Math.round(((hourOne * 2) + (hourTwo * 1)) / 3))
             }
         } else {
-            return ((hourOne + hourTwo) / 2);
+            return (Math.round((hourOne + hourTwo) / 2));
         }
     };
 };
@@ -41,6 +41,8 @@ class CurrentData {
 class Forecast {
     constructor(data) {
         this.name = data['name'];
+        this.x = new Date (data['startTime']);
+        this.time = this.x.toLocaleTimeString('en-US');
         this.shortDesc = data[`shortForecast`];
         this.longDesc = data[`detailedForecast`];
         this.temp = data['temperature'];
@@ -62,19 +64,61 @@ class Forecast {
 
 class EveryTwelveHourData {
     constructor(daily) {
-        this.data = daily;
+        this.data = daily['properties']['periods']
         this.list = [];
     }
     create() {
-        console.log(this.data)
-        let n = 0
-        while (n < 14) {
-            let data = this.data[n]
-            let x = new Forecast(data);
-            this.list.push(x);
-            n++
+        try {
+            let n = 1
+            while (n <= 10) {
+                let x = this.data[n]
+                x = new Forecast(x);
+                this.list.push(x);
+                n++
+            }
+            return this.list
+        } catch (error) {
+            console.log(error);
         }
+    };
+};
+
+class ChartData {
+    constructor(hourly) {
+        this.list = hourly['properties']['periods']
+        this.time = [];
+        this.chart = {
+                temp: {
+                    title: 'Temperature',
+                    data: []
+                },
+                precipitation: {
+                    title: 'Chance of Precipitation',
+                    data: []
+                },
+                humidity: {
+                    title: 'Humidity',
+                    data: []
+                }
+            }
+        };
+    create() {
+        try {
+            let n = 0
+            while (n < 13) {
+                let info = this.list[n]
+                let forecast = new Forecast(info);
+                this.time.push(forecast.time);
+                this.chart.temp.data.push(forecast.temp);
+                this.chart.precipitation.data.push(forecast.precipitation);
+                this.chart.humidity.data.push(forecast.humidity);
+                n++
+            }
+            return this;
+        } catch (error) {
+            console.log(error);
+        };
     }
 };
 
-export { CurrentData, EveryTwelveHourData };
+export { ChartData, EveryTwelveHourData, CurrentData };
