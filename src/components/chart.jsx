@@ -20,69 +20,39 @@ ChartJS.register(
     Tooltip,
     Legend
 );
-
-const LineChart = ((props) => {
-    const id = props.id;
-    const style = {
-        'display': 'flex',
-        'width':'50em'
-    };
-    const title = props.title;
-    const data = {
-        labels: props.time,  //array
-        datasets: [{
-            label: 'Time',
-            data: props.data, //array
-            borderColor: 'black',
-            tension: .5,
-        }]
-    };
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                display: false,
-            },
-            title: {
-                display: true,
-                text: title,
-            }
-        }
-    };
-    try {
-        return (
-            <div style={style} id={id}>
-                <Line
-                    data={data}
-                    options={options}
-                ></Line>
-            </div>
-        )
-    } catch (error) { console.log(error) }
-});
-
-class Charts extends React.Component {
-    constructor(props) {
-        super(props);
-        this.style = {
+let Chart = ((props) => {
+        const title = props.title
+        const chartData = props.chartData
+        const time = props.time
+        const style = {
             'display': 'flex',
-            'flexDirection':'row'
+            'width': '40em'
         };
-    };
-    render() {
-        try {
-            const { data } = this.props;
-            const chartDataArray = Object.values(data.chart);
+        const options = {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: true,
+                    text: title,
+                }
+            }
+        };
+        const data = {
+            labels: time, 
+            datasets: [{
+                label: 'Time',
+                data: chartData,
+                borderColor: 'black',
+                tension: .5
+            }]
+        };
+    
+    return (
+        <Line style={style} data={data} options={options} />
+        )
+})
 
-            return (
-                <div style={this.style}>
-                    {chartDataArray.map((prop) => {
-                        return <LineChart key={prop?.title} title={prop?.title} time={data.time} data={prop?.data} ></LineChart>
-                    })}
-                </div>
-            );
-        } catch (error) { console.log(error) }
-    };
-};
-
-export default Charts;
+export default Chart;

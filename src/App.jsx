@@ -2,7 +2,7 @@ import React, { StrictMode, useState } from 'react'
 import {createRoot} from 'react-dom/client';
 import Current from './components/current';
 import TwelveHour from './components/twelveHours';
-import Charts from './components/chart'
+import ChartView from './components/chartView'
 import Location from './call.mjs'
 import * as data from './data.mjs'
 
@@ -10,6 +10,7 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            isLoading: true,
             currentData: null,
             chartData: null,
             twelveHourData: null
@@ -45,34 +46,43 @@ class App extends React.Component {
             let response = await location.get();
             await response.call();
             let chartData = new data.ChartData(response.hourly);
-            let currentData = new data.CurrentData(response.hourly)
+            let current = new data.CurrentData(response.hourly)
             let twelveHourData = new data.EveryTwelveHourData(response.daily)
-            chartData = chartData.create()
-            twelveHourData = twelveHourData.create()
+            let chart = chartData.create()
+            let twelve = twelveHourData.create()
             this.setState({
-                currentData,
-                chartData,
-                twelveHourData
+                currentData:current,
+                chartData:chart,
+                twelveHourData:twelve,
+                isLoading: false
+
             });
         } catch (error) { console.log(error) };
     };
     render() {
         try {
-            const { currentData, twelveHourData, chartData } = this.state;
-            const style = this.style;
-            return (
-                <div style={style.app}>
-                    <div style={style.center}>
-                        <div style={style.panel} />
-                        <main style={style.main}>
-                            <Current id="current" data={currentData} />
-                            <Charts id='chart' data={chartData} />
-                            <TwelveHour id="twelveHour" data={twelveHourData} />
-                        </main>
-                        <div style={style.panel} />
+            const {isLoading} =this.state
+            if (isLoading) {
+                return (
+                    <div>Loading...</div>
+                )
+            } else {
+                const { currentData, twelveHourData, chartData } = this.state;
+                const style = this.style;
+                return (
+                    <div style={style.app}>
+                        <div style={style.center}>
+                            <div style={style.panel} />
+                            <main style={style.main}>
+                                <Current id="current" data={currentData} />
+                                <ChartView id='chart' data={chartData} />
+                                <TwelveHour id="twelveHour" data={twelveHourData} />
+                            </main>
+                            <div style={style.panel} />
+                        </div>
                     </div>
-                </div>
-            );
+                );
+            }
         } catch (error) { console.log(error) };
     };
 };

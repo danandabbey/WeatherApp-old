@@ -85,33 +85,33 @@ class EveryTwelveHourData {
 
 class ChartData {
     constructor(hourly) {
-        this.list = hourly['properties']['periods']
+        this.hourly = hourly
         this.time = [];
         this.chart = {
-                temp: {
-                    title: 'Temperature',
-                    data: []
-                },
-                precipitation: {
-                    title: 'Chance of Precipitation',
-                    data: []
-                },
-                humidity: {
-                    title: 'Humidity',
-                    data: []
-                }
+            temp: {
+                title: 'Temperature',
+                chartData: []
+            },
+            precipitation: {
+                title: 'Chance of Precipitation',
+                chartData: []
+            },
+            humidity: {
+                title: 'Humidity',
+                chartData: []
             }
-        };
+        }
+    }
     create() {
         try {
             let n = 0
             while (n < 13) {
-                let info = this.list[n]
+                let info = this.hourly['properties']['periods'][n]
                 let forecast = new Forecast(info);
                 this.time.push(forecast.time);
-                this.chart.temp.data.push(forecast.temp);
-                this.chart.precipitation.data.push(forecast.precipitation);
-                this.chart.humidity.data.push(forecast.humidity);
+                this.chart.temp.chartData.push(forecast.temp);
+                this.chart.precipitation.chartData.push(forecast.precipitation);
+                this.chart.humidity.chartData.push(forecast.humidity);
                 n++
             }
             return this;
