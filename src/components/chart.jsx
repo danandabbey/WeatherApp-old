@@ -26,10 +26,16 @@ let Chart = ((props) => {
         const time = props.time
         const style = {
             'display': 'flex',
-            'width': '40em'
-        };
+            'width': '60em',
+            'border': '1px solid lightGray',
+            'borderRadius': '.5em',
+            'padding':10
+        }
         const options = {
             responsive: true,
+            layout: {
+                    autoPadding: true
+                },
             plugins: {
                 legend: {
                     display: false,
@@ -37,6 +43,10 @@ let Chart = ((props) => {
                 title: {
                     display: true,
                     text: title,
+                    font: {
+                        size: 24
+                    },
+                    padding:20
                 }
             }
         };

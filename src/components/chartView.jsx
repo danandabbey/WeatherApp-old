@@ -8,10 +8,15 @@ class ChartView extends React.Component {
         this.style = {
             main: {
                 'display': 'flex',
-                'flexDirection': 'row'
+                'flexDirection': 'row',
+                'alignItems': 'center',
+                'gap': '2em',
             },
             button: {
-                'width': '3em'
+                'fontSize':'5em',
+                'border' : 'none',
+                'background': 'none',
+                'color': 'gray'
             }
         };
         this.state = {
@@ -62,9 +67,9 @@ class ChartView extends React.Component {
                 const style = this.style
                 return (
                     <div style={style.main}>
-                        <button style={style.button} onClick={this.last}>last</button>
+                        <button style={style.button} onClick={this.last}>&lt;</button>
                         < Chart time={time} title={title} chartData={chartData} />
-                        <button style={style.button} onClick={this.next}>next</button>
+                        <button style={style.button} onClick={this.next}>&gt;</button>
                     </div>
                 );
         } catch (error) {

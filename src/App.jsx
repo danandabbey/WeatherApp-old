@@ -36,7 +36,6 @@ class App extends React.Component {
                 'display': 'flex',
                 'alignItems': 'center',
                 'flexDirection': 'column',
-                'gap': '5em',
             }
         };
     };

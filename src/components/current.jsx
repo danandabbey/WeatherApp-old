@@ -5,12 +5,11 @@ class Current extends React.Component {
         super(props);
         this.props = props;
         this.style = {
-            'gap': '2',
+            'gap': '.2em',
             'padding': '1em',
             'display': 'flex',
             'flexDirection': 'column',
             'alignItems': 'center',
-            'border': 'solid #000 .1em',
             'height': '20em',
             'width': '30em',
             'justifySelf': 'center'
@@ -21,13 +20,12 @@ class Current extends React.Component {
             const { data } = this.props;
             const desc = data?.description;
             const temp = `${data?.temp}\u00b0F`;
-            const precipitation = `${data?.precipitation}% chance of rain`;
-            const humidity = `${data?.humidity}% humidity`;
-            const windSpeed = `wind speed: ${data?.windSpeed}`;
+            const precipitation = `Precipitation: ${data?.precipitation}% chance`;
+            const humidity = `Humidity: ${data?.humidity}%`;
+            const windSpeed = `Wind: ${data?.windSpeed}`;
             return (
                 <div style={this.style}>
                     <h2>Currently</h2>
-                    <hr />
                     <div>{desc}</div>
                     <div>{temp}</div>
                     <br />

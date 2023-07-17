@@ -7,7 +7,7 @@ let Forecast = ((props) => {
         'display': 'flex',
         'flexDirection': 'column',
         'gap': '.5em',
-        'border': 'solid #000 .1em',
+        'border': 'solid lightGray .1em',
         'borderRadius': '5px',
         'width': '12em',
         'height': '5em',
@@ -35,7 +35,9 @@ class TwelveHour extends React.Component {
             'display': 'flex',
             'flexDirection': 'row',
             'flexWrap': 'wrap',
-            'gap': '.2em'
+            'gap': '.2em',
+            'paddingTop': '5em',
+            'paddingBottom' : '5em'
         };
     };
     render() {
