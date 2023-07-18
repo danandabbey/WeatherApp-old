@@ -1,5 +1,5 @@
 class CurrentData {
-    constructor(hourly) {
+    constructor(hourly,city,state) {
         this.hourOne = hourly['properties']['periods'][0];
         this.hourTwo = hourly['properties']['periods'][1];
         this.temp = this.average(this.hourOne['temperature'], this.hourTwo['temperature']);
@@ -8,6 +8,9 @@ class CurrentData {
         this.windSpeed = this.hourOne['windSpeed'];
         this.description = this.hourOne['shortForecast'];
         this.isDayTime = this.hourOne['isDaytime'];
+        this.windDirection = this.hourOne['windDirection']
+        this.city = city
+        this.state = state
     };
     check(x) {
         if (x === null) {
@@ -21,19 +24,20 @@ class CurrentData {
         let hourTwo = this.check(two)
         let minutes = new Date().getMinutes();
         if (minutes > 30) {
+
             if (minutes > 45) {
-                return (Math.round((hourOne * 1) + (hourTwo * 3) / 4))
+                return Math.round((hourOne * 1 + hourTwo * 3) / 4)
             } else {
-                return (Math.round(((hourOne * 1) + (hourTwo * 2)) / 3))
+                return Math.round((hourOne * 1 + hourTwo * 2) / 3)
             }
         } else if (minutes < 30) {
             if (minutes < 15) {
-                return (Math.round(((hourOne * 3) + (hourTwo * 1)) / 4))
+                return Math.round((hourOne * 3 + hourTwo * 1) / 4)
             } else {
-                return (Math.round(((hourOne * 2) + (hourTwo * 1)) / 3))
+                return Math.round((hourOne * 2 + hourTwo * 1) / 3)
             }
         } else {
-            return (Math.round((hourOne + hourTwo) / 2));
+            return Math.round((hourOne + hourTwo) / 2);
         }
     };
 };

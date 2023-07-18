@@ -2,17 +2,16 @@ import React from 'react'
 
 let Forecast = ((props) => {
     const style = {
+        'flexDirection': 'column',
         'padding': '.2em',
         'alignItems': 'center',
         'display': 'flex',
-        'flexDirection': 'column',
         'gap': '.5em',
         'border': 'solid lightGray .1em',
         'borderRadius': '5px',
-        'width': '12em',
-        'height': '5em',
         'justifyContent': 'center',
-        'flexWrap': 'wrap'
+        'minWidth': '10em',
+        'minHeight':'8em'
     };
     try {
         return (
@@ -31,21 +30,20 @@ class TwelveHour extends React.Component {
         this.style = {
             'alignItems': 'center',
             'justifyContent': 'center',
-            'width': '80em',
             'display': 'flex',
-            'flexDirection': 'row',
             'flexWrap': 'wrap',
             'gap': '.2em',
             'paddingTop': '5em',
-            'paddingBottom' : '5em'
+            'paddingBottom': '5em'
         };
     };
     render() {
         try {
             const { data } = this.props;
+            const isDay = data.filter((obj) => obj.isDayTime === true)
             return (
                 <div style={this.style} >
-                    {data?.map((prop) => {
+                    {isDay?.map((prop) => {
                         const name = prop.name;
                         const temp = `${prop.temp}\u00b0 F`;
                         const precipitation = `precipitation: ${prop.precipitation}%`;

@@ -40,8 +40,11 @@ class Data {
         try {
             let hourly = this.response[`properties`][`forecastHourly`];
             let daily = this.response[`properties`][`forecast`];
+            this.city = this.response['properties']['relativeLocation']['properties']['city'];
+            this.state = this.response['properties']['relativeLocation']['properties']['state'];
             this.daily = await fetch(daily).then((response) => response.json());
             this.hourly = await fetch(hourly).then((response) => response.json());
+            console.log(this.hourly)
             return this;
         } catch (error) {
             console.log(`Error: ${error.code} Message: ${error.message}`);
