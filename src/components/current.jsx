@@ -7,41 +7,38 @@ class Current extends React.Component {
     };
     render() {
         try {
+            const style = ((x) => {
+                let list = [
+                    {
+                        class: 'h1',
+                        style: {
+                            'fontSize': '1.5'
+
+                        }
+                    }
+                ];
+                let css = list.find(((obj) => obj.class === x));
+                return css.style;
+            });
+
             const { data } = this.props;
             const desc = data?.description;
             const temp = `${data?.temp}\u00b0F`;
-            const precipitation = `Precipitation: ${data?.precipitation}% chance`;
+            const precipitation = `${data?.precipitation}% chance`;
             const humidity = `Humidity: ${data?.humidity}%`;
-            const wind = `Wind: ${data.windDirection}  ${data?.windSpeed}`;
+            const wind = `Wind: ${data.windDirection} ${data?.windSpeed}`;            
+        
             const city = data.city
             const state = data.state
-
-
-            const style = {
-                con: {
-                    'fontSize':'1.2em',
-                    'gap': '.2em',
-                    'padding': '2em',
-                    'display': 'flex',
-                    'flexDirection': 'column',
-                    'justifySelf': 'center',
-                    'alignItems': 'center',
-                    'letterSpacing':'.1px'
-                },
-                title: {
-                    'fontSize': '1.5em',
-                    'textAlign' : 'center'
-                }
-            };
             return (
-                <div style={style.con}>
-                    <h1 style={style.title}>{city}, {state}</h1>
+                <div className={'current'}>
+                    <h1 style={style('h1')}>{city}, {state}</h1>
                     <br />
                     <div>{desc}</div>
+                    <div>{precipitation}</div>
                     <div>{temp}</div>
                     <br />
-                    <div>{precipitation}</div>
-                    <div>{humidity}</div>
+                    <p>{humidity}</p>
                     <div>{wind}</div>
                 </div>
             );

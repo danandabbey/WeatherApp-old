@@ -1,0 +1,56 @@
+button{
+    border:none;
+    background: none;
+}
+button:hover {
+    color: #808080;
+}
+.app{
+    font-family: 'lato', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width:100%;
+}
+.forecast{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: '1.3em';
+}        
+
+.twelveHour{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+h1{
+    text-align: center;
+}
+
+.current{
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    gap: .2em;
+    padding: 2em;
+    letter-spacing: .1px;
+    font-size: 1.2em;
+}
+
+.loading{
+    display: flex;
+    justify-content: center;
+    font-size: 5em;
+    text-align: center;
+}
+.btnCon{
+    padding-top: 2em;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

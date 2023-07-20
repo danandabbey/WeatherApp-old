@@ -2,31 +2,24 @@ import { useEffect, useState } from "react"
 
 const Loading = ((props) => {
 
-    const [state, setState] = useState('Loading');
+    const [state, setState] = useState('');
 
     useEffect(() => {
         let n = 0;
         let interval = setInterval(() => {
-            if (n < 5) {
+            if (n < 10) {
                 setState((state) => state + '.');
                 n++
             } else {
+                setState('Please allow location access');
                 clearInterval(interval);
-                setState('Error :(');
             };
         }, 500);
         return (() => clearInterval(interval));
     }, []);
     
-    const style = {
-        'display': 'flex',
-        'justifyContent': 'center',
-        'fontSize': '5em',
-        'fontFamily': ['lato', 'Arial', 'Helvetica', 'sansSerif'],
-        'textAlign': 'center'
-    };
     return (
-        <div style={style}>
+        <div className="loading">
             <p>{state}</p>
         </div>
     );

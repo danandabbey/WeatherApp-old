@@ -1,48 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react';
+import * as util from '../util.mjs';
 
 let Forecast = ((props) => {
-    const style = {
-        'flexDirection': 'column',
-        'padding': '.2em',
-        'alignItems': 'center',
-        'display': 'flex',
-        'gap': '.5em',
-        'border': 'solid lightGray .1em',
-        'borderRadius': '5px',
-        'justifyContent': 'center',
-        'minWidth': '10em',
-        'minHeight':'8em'
-    };
     try {
+        const [mode, setState] = useState(util.isMobile ? 'mobile' : 'desktop');
+
+        const style = ((x) => {
+            let list = [
+                {
+                    class: 'forecast',
+                    style: {
+                        'minWidth': mode === 'desktop'?'10em':'8em',
+                        'minHeight': mode === 'desktop'?'8em':'6em',
+                        'fontSize': mode === 'desktop'? '1em':'1.3em',
+                        'gap': mode === 'desktop'?'.4em':'.7em',
+                        'padding': mode === 'desktop'?'2em':'1em',
+                    }
+                },
+                {
+                    class: 'name',
+                    style: {
+                        'fontSize' : mode === 'desktop'? '1.35em':'1.4'
+                    }
+                }
+            ];
+            let css = list.find(((obj) => obj.class === x));
+            return css.style;
+        });
+
         return (
-            <div style={style}>
-                <div>{props.name}</div>
+            <div className='forecast' style={style('forecast')}>
+                <div style={style('name')}>{props.name}</div>
                 <div>{props.temp}</div>
                 <div>{props.precipitation}</div>
             </div>
         );
-    } catch(error){console.log(error)}
+    } catch (error){
+        console.log(error)
+    }
 });
 
 class TwelveHour extends React.Component {
-    constructor(props) {
-        super(props);
-        this.style = {
-            'alignItems': 'center',
-            'justifyContent': 'center',
-            'display': 'flex',
-            'flexWrap': 'wrap',
-            'gap': '.2em',
-            'paddingTop': '5em',
-            'paddingBottom': '5em'
-        };
-    };
     render() {
         try {
-            const { data } = this.props;
+        const style = ((x) => {
+            let list = [
+                {
+                    class: 'twelveHour',
+                    style: {
+                        'gap': '.2em',
+                        'paddingTop': '5em',
+                        'paddingBottom': '5em'
+                    }
+                }
+            ];
+            let css = list.find(((obj) => obj.class === x));
+            return css.style;
+        });
+            const { data} = this.props;
             const isDay = data.filter((obj) => obj.isDayTime === true)
             return (
-                <div style={this.style} >
+                <div className={'twelveHour'} style={style('twelveHour')} >
                     {isDay?.map((prop) => {
                         const name = prop.name;
                         const temp = `${prop.temp}\u00b0 F`;
@@ -51,7 +69,9 @@ class TwelveHour extends React.Component {
                     })}
                 </div>
             );
-        } catch (error) { console.log(error) }
+        } catch(error) {
+            console.log(error)
+        }
     };
 };
 
