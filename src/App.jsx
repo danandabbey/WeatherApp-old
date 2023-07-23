@@ -32,9 +32,8 @@ const App = ((props) => {
             });
             fetchData();
         } catch (error) {
-                
             setLoading(false)
-            setError('Error Loading Data useEffect1')
+            setError('Error Loading Data')
             console.log(error)
         };
     }, []);
@@ -54,7 +53,7 @@ const App = ((props) => {
             setTwelve(twelveHourData.create())
             setLoading(false)
         } catch (error) {
-            ('Error Loading Data')
+            //setError('Error Loading Data')
             console.log(error)
         };
     }, [resp]);

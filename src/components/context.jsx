@@ -6,16 +6,17 @@ export const StyleContext = createContext({})
 
 export const ContextProvider = ((props) => {
     const cutOff = 900;
-    const [theme, setTheme] = useState('light')
+    const [theme, setTheme] = useState('dark')
     const [mobile, setMobile] = useState(window.innerWidth <= cutOff)
-    const [style, setStyle] = useState(styles(mobile, theme))
+    const [style, setStyle] = useState(styles(theme))
 
     useEffect(() => {
-        setStyle(styles(mobile, theme));
-    }, [mobile, theme]);
+        setStyle(styles(theme));
+    }, [theme]);
 
     useEffect(() => {
-        setTheme(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light')
+        const preferredDarkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        setTheme(preferredDarkTheme ? 'dark':'light')
     }, [])
     
     useEffect(() => {

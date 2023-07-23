@@ -13,8 +13,7 @@ things to do:
 
 import React, { StrictMode, useState, useEffect, createContext, useContext} from 'react'
 import { Line } from 'react-chartjs-2';
-import * as util from '../util.mjs'
-import { StyleContext } from './context';
+import { StyleContext, MobileContext } from './context';
 
 import {
     Chart as ChartJS,
@@ -56,7 +55,10 @@ const ChartButtons = ((props) => {
 //**********************************************************************
 
 const LineChart = ((props) => {
+    const isMobile = useContext(MobileContext);
     const style = useContext(StyleContext)
+    let titleSize = isMobile ? 30 : 40
+    let fontSize = isMobile ? 15 : 20
     const options = {
         responsive: true,
         layout: {
@@ -70,7 +72,7 @@ const LineChart = ((props) => {
                 display: true,
                 text: props.title,
                 font: {
-                    size: util.isMobile ? 15 : 30
+                    size: titleSize
                 },
                 padding: 20,
                 color: style.app.color
@@ -80,17 +82,29 @@ const LineChart = ((props) => {
             x: {
                 grid: {
                     color: style.app.color,
+                    font: {
+                        size: fontSize
+                    }
                 },
                 ticks: {
                     color: style.app.color,
+                    font: {
+                        size: fontSize
+                    }
                 },
             },
             y: {
                 grid: {
                     color: style.app.color,
+                    font: {
+                        size: fontSize
+                    }
                 },
                 ticks: {
                     color: style.app.color,
+                    font: {
+                        size: fontSize
+                    }
                 },
             },
         },
@@ -111,8 +125,7 @@ const LineChart = ((props) => {
             borderColor: style.app.color,
             tension: .5
         }]
-    };
-    
+    };    
     return (
         <Line style={style.chart} data={data} options={options} />
     )

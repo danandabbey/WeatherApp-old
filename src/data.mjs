@@ -45,8 +45,8 @@ class CurrentData {
 class Forecast {
     constructor(data) {
         this.name = data['name'];
-        this.x = new Date (data['startTime']);
-        this.time = this.x.toLocaleTimeString('en-US');
+        this.x = new Date (data['startTime']).getHours();
+        this.time = this.hourly(this.x)
         this.shortDesc = data[`shortForecast`];
         this.longDesc = data[`detailedForecast`];
         this.temp = data['temperature'];
@@ -54,6 +54,18 @@ class Forecast {
         this.humidity = data['relativeHumidity']['value'];
         this.windSpeed = data['windSpeed'];
         this.isDayTime = data['isDaytime'];
+    };
+    hourly(hour) {
+        if (hour === 0) {
+            return `12am`;
+        } else if (hour > 12) {
+            hour = hour - 12;
+            return `${hour}pm`;
+        }else if (hour === 12) {
+            return `12pm`;
+        } else {
+            return `${hour}am`;
+        };
     };
     rain(data) {
         let x = data['probabilityOfPrecipitation']['value'];

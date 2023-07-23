@@ -1,4 +1,5 @@
-const styles = ((isMobile, theme) => {
+let isMobile = window.innerWidth <= 900
+const styles = ((theme) => {
         let x = {
         blackAndWhite: {
             color: '#000',
@@ -39,7 +40,7 @@ const styles = ((isMobile, theme) => {
             'textAlign': 'center'
         },
         currentTitle: {
-            'fontSize': mobile('1.5em','2em')
+            'fontSize': '2em'
         },
         chartCon: {
             'display': 'flex',
@@ -47,7 +48,7 @@ const styles = ((isMobile, theme) => {
             'alignItems': 'center'
         },
         chartBtn: {
-            'fontSize': mobile('1.3em','1.4em'),
+            'fontSize': '1.4em',
             'color': color
         },
         chartBtnCon: {

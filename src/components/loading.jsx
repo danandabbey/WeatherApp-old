@@ -11,7 +11,7 @@ const Loading = ((props) => {
                 setState((msg) => msg + '.');
                 n++
             } else {
-                setState('Please allow location access');
+                setState('Make sure location access is turned on and refresh.')
                 clearInterval(interval);
             };
         }, 500);
