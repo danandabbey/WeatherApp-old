@@ -1,10 +1,16 @@
 'use strict'
 
 import React from 'react'
-    class Navigation extends React.Component {
-        constructor(props) {
-            super(props)
-            this.style = {
+const Menu = ((props) => {
+    
+    const control = (() => {
+        if (style.hidden.display === 'flex') {
+            style.hidden.display = 'none'
+        } else {
+            style.hidden.display = 'flex'
+        }
+    })
+    const style = {
                 button:{
                 'gap': '1em',
                 'padding-bottom': '5em',
@@ -32,36 +38,22 @@ import React from 'react'
                 'text-align': 'center',
                 'display': 'inline'
                 },
-                hidden:{
+            hidden: {
                 'flex- direction': 'column',
                 'gap': '.5em',
                 'display': 'none'
             }
-            }
-        }
-            loc(url){
-        window.location.href = `${url}.html`;
-        };
-        control(){
-        if (this.style.hidden.display === 'flex') {
-            this.style.hidden.display = 'none'
-        } else {
-            this.style.hidden.display = 'flex'
-        }
-        };
-        render() {
-            const style = this.style;
-            return (
-                <nav style={style.nav}>
-                    <div style={style.menu} onClick={this.control}>Menu</div>
-                    <div id='hidden' style={style.hidden}>
-                        <button style={style.button} onClick={this.loc('index')}>Home</button>
-                        <button style={style.button} onClick={this.loc('about')}>About</button>
-                        <button style={style.button} onClick={this.loc('projects')}>Projects</button>
-                    </div>
-                </nav>
-            )
-        };
-};
-    
+
+
+    return (
+            <nav style={style.nav}>
+                <div style={style.menu} onClick={this.control}>Menu</div>
+                <div id='hidden' style={style.hidden}>
+                    <button style={style.button} onClick={this.loc('projects')}>Color</button>
+                </div>
+            </nav>
+        )
+})
+
+
 export default Navigation;

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react"
+import React, { StrictMode, useState, useEffect, createContext, useContext} from 'react'
 
 const Loading = ((props) => {
 
-    const [state, setState] = useState('');
+    const [msg, setState] = useState('');
 
     useEffect(() => {
         let n = 0;
         let interval = setInterval(() => {
             if (n < 10) {
-                setState((state) => state + '.');
+                setState((msg) => msg + '.');
                 n++
             } else {
                 setState('Please allow location access');
@@ -20,7 +20,7 @@ const Loading = ((props) => {
     
     return (
         <div className="loading">
-            <p>{state}</p>
+            <p>{msg}</p>
         </div>
     );
 });

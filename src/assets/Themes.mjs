@@ -1,55 +1,90 @@
-class Theme {
-    constructor(theme) {
-        this.newTheme = theme
-        this.list = [
-            {
-                name: 'BlackOnWhite',
-                id:1,
-                style: {
-                    app: {
-                        'color': '#000',
-                        'backgroundColor': '#fff'
-                    },
-                }
-            },
-            {
-                name: 'YellowOnGreen',
-                id:2,
-                style: {
-                    app: {
-                        'color': '#FFC98A',
-                        'backgroundColor': '#005454'
-                    },
-                }
-            },
-            {
-                name: 'MossyFernDark',
-                id:3,
-                style: {
-                    app: {
-                        'color': '#A27B5C',
-                        'backgroundColor': '#2C3639'
-                    },
-                }
-            },
-            {
-                name: 'MossyFernLight',
-                id:4,
-                style: {
-                    app: {
-                        'color': '#DCD7C9',
-                        'backgroundColor': '#3F4E4F'
-                    },
-                }
-            },
-        ];
-        const themeObj = this.list.find(((obj) => obj.name === theme));
-
-        this.style = themeObj ? themeObj.style : this.list[0].style
+const styles = ((isMobile, theme) => {
+        let x = {
+        blackAndWhite: {
+            color: '#000',
+            background: '#fff'
+        },
+        dark: {
+            color: '#A27B5C',
+            background: '#2C3639'
+        },
+        light: {
+            color: '#DCD7C9',
+            background: '#3F4E4F'
+        }
     };
-    test() {
-        this.newTheme
-    }
-};
+    const color = x[theme].color 
+    const background = x[theme].background
+    const mobile = ((m, d) => isMobile ? m : d)
 
-export default Theme;
+    return {
+        app: {
+            'color': color,
+            'backgroundColor': background,
+            'fontSize': mobile('1.2em','1.3em'),
+
+        },
+        chart: {
+            'borderTop': `solid ${color} .1em`,
+            'borderBottom': `solid ${color} .1em`
+        },
+        current: {
+            'gap': '.2em',
+            'padding': '2em',
+            'letterSpacing': '.1px',
+            'display': 'flex',
+            'flexDirection': 'column',
+            'justifySelf': 'center',
+            'alignItems': 'center',
+            'textAlign': 'center'
+        },
+        currentTitle: {
+            'fontSize': mobile('1.5em','2em')
+        },
+        chartCon: {
+            'display': 'flex',
+            'justifyContent': 'center',
+            'alignItems': 'center'
+        },
+        chartBtn: {
+            'fontSize': mobile('1.3em','1.4em'),
+            'color': color
+        },
+        chartBtnCon: {
+            'gap': '5em',
+            'paddingTop': '2em',
+            'display': 'flex',
+            'flexDirection': 'row',
+            'justifyContent': 'center'
+        },
+        forecast: {
+            'minWidth': mobile('4em','6em'),
+            'minHeight': mobile('4em','6em'),
+            'gap': '.5em',
+            'padding': mobile('1.5em','2em'),
+            'display': 'flex',
+            'flexDirection': 'column',
+            'alignItems': 'center',
+            'justifyContent': 'center',
+        },
+        forecastName: {
+            'fontSize': mobile('1.6em','1.5em')
+        },
+        media: {
+            'width': mobile("100%", "70%"),
+            'display': 'flex',
+            'flexDirection': 'column'
+        },
+        twelveHour: {
+            'gap': '2em',
+            'paddingTop': '2em',
+            'paddingBottom': '2em',
+            'alignItems': 'center',
+            'justifyContent': 'center',
+            'display': 'flex',
+            'flexWrap': 'wrap'
+        },
+    };
+});
+
+export { styles };
