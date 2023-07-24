@@ -31,14 +31,13 @@ const App = ((props) => {
             fetchData();
         } catch (error) {
             setLoading(false)
-            setError('Error Loading Data')
-            console.log(error)
+            setError([`Data Error`,error])
         };
     }, [])
     return (
         <div className='app' style={style.app}>
             {isLoading ? <Loading /> : false}
-            {error ? <CustomError error={error} /> : false}
+            {error ? <CustomError name ={error[0]} error={error[1]} /> : false}
             {!isLoading && !error && data? (
                 <dataContext.Provider value={data}>
                     <Current/>
