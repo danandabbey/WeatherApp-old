@@ -1,54 +1,45 @@
-class Location {
-    constructor() {
-        this.options = { enableHighAccuracy: true };
-    };
-    async get() {
+import axios from 'axios'
+
+const location = (async()=>{
+    const options = { enableHighAccuracy: true };
         try {
-            const position = await new Promise((success, error) => {
+            const position = (await new Promise((success, error) => {
                 navigator.geolocation.getCurrentPosition(
                     success,
                     error,
-                    this.options
-                )
-            });
-            const crd = position.coords;
-            const lat = crd.latitude;
-            const lon = crd.longitude;
-            let response = await this.call(lat, lon);
+                    options
+                );
+            })).coords;
+            const lat = position.latitude;
+            const lon = position.longitude;
+            let response = await call(lat, lon);
             return response;
 
         } catch (error) {
             console.log(`Error: ${error.code} Message: ${error.message}`);
         };
-    };
-    async call(lat, lon) {
-        try {
-            let response = await fetch(`https://api.weather.gov/points/${lat},${lon}`)
-                .then((value) => value.json());
-            return new Data(response);
-        } catch (error) {
-            console.log(`Error: ${error.code} Message: ${error.message}`);
-        }
-    };
-};
+    });
 
-class Data {
-    constructor(response) {
-        this.response = response;
-    };
-    async call() {
-        try {
-            let hourly = this.response[`properties`][`forecastHourly`];
-            let daily = this.response[`properties`][`forecast`];
-            this.city = this.response['properties']['relativeLocation']['properties']['city'];
-            this.state = this.response['properties']['relativeLocation']['properties']['state'];
-            this.daily = await fetch(daily).then((response) => response.json());
-            this.hourly = await fetch(hourly).then((response) => response.json());
-            return this;
-        } catch (error) {
-            console.log(`Error: ${error.code} Message: ${error.message}`);
-        }
-    };
-};
 
-export default Location;
+const call = (async (lat, lon) => {
+    try {
+        const response = (await axios.get(`https://api.weather.gov/points/${lat},${lon}`)
+            .then((value) => value.data))
+        const hourResponse = await axios.get(response[`properties`][`forecastHourly`]).then((response) => response.data).then((response) => response['properties']['periods']);
+        const dayResponse = await axios.get(response[`properties`][`forecast`]).then((response) => response.data).then((response) => response['properties']['periods']);
+        const call = {
+            response: response,
+            hourly: hourResponse,
+            daily: dayResponse,
+            location: {
+                city: response['properties']['relativeLocation']['properties']['city'],
+                state: response['properties']['relativeLocation']['properties']['state']
+            }
+        };
+        return call;
+    } catch (error) {
+        console.log(`Error: ${error.code} Message: ${error.message}`);
+    }
+});
+
+export default location;

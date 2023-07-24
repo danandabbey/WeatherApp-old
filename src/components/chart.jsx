@@ -14,6 +14,7 @@ things to do:
 import React, { StrictMode, useState, useEffect, createContext, useContext} from 'react'
 import { Line } from 'react-chartjs-2';
 import { StyleContext, MobileContext } from './context';
+import { dataContext } from '../App';
 
 import {
     Chart as ChartJS,
@@ -135,32 +136,35 @@ const LineChart = ((props) => {
 //**********************************************************************
 
 const Chart = ((props) => {
+    const data = useContext(dataContext)
     const style = useContext(StyleContext)
-    const [chartData, setData] = useState(props.data)
-
-    const chart = props.data.chart;
-    const charts = [
-        { id: 1, title: 'Temperature', data: chart.temp },
-        { id: 2, title: 'Chance of Precipitation', data: chart.precipitation },
-        { id: 3, title: 'Humidity', data: chart.humidity }
-    ]
+    const [currentChart, setCurrentData] = useState({})
+    const time = data.chart.time;
+    const chart = data.chart.chart;
 
     const find = ((key) => {
+
+        const charts = [
+            { id: 1, title: 'Temperature', data: chart.temp },
+            { id: 2, title: 'Chance of Precipitation', data: chart.precipitation },
+            { id: 3, title: 'Humidity', data: chart.humidity }
+        ];
+
         let object = charts.find((obj) => obj.id === key)
         return object.data;
     });
-    const temperature = (() => setData(find(1)));
-    const precipitation = (() => setData(find(2)));
-    const humidity = (() => setData(find(3)));
+    const temperature = (() => setCurrentData(find(1)));
+    const precipitation = (() => setCurrentData(find(2)));
+    const humidity = (() => setCurrentData(find(3)));
 
     useEffect(() => {
         temperature();
-    }, [props.data]);
+    }, [data.chart]);
 
     return (
         <div style={style.chartCon}>
             <div style={style.media} className='media'>
-                < LineChart time={props.data.time} title={chartData.title} data={chartData.data} />
+                < LineChart time={time} title={currentChart.title} data={currentChart.data} />
                 <ChartButtons temperature={temperature} precipitation={precipitation} humidity={humidity} />
             </div>
         </div>

@@ -1,109 +1,84 @@
-class CurrentData {
-    constructor(hourly,city,state) {
-        this.hourOne = hourly['properties']['periods'][0];
-        this.hourTwo = hourly['properties']['periods'][1];
-        this.temp = this.average(this.hourOne['temperature'], this.hourTwo['temperature']);
-        this.precipitation = this.average(this.hourOne['probabilityOfPrecipitation']['value'], this.hourTwo['probabilityOfPrecipitation']['value']);
-        this.humidity = this.average(this.hourOne['relativeHumidity']['value'], this.hourTwo['relativeHumidity']['value']);
-        this.windSpeed = this.hourOne['windSpeed'];
-        this.description = this.hourOne['shortForecast'];
-        this.isDayTime = this.hourOne['isDaytime'];
-        this.windDirection = this.hourOne['windDirection']
-        this.city = city
-        this.state = state
-    };
-    check(x) {
-        if (x === null) {
-            return 0;
-        } else {
-            return x;
-        }
-    };
-    average(one, two) {
-        let hourOne = this.check(one);
-        let hourTwo = this.check(two)
+const current = ((data) => {
+    const average = ((x, y) => {
+        let one = x === null ? 0 : x;
+        let two = y === null ? 0 : y;
         let minutes = new Date().getMinutes();
-        if (minutes > 30) {
-
-            if (minutes > 45) {
-                return Math.round((hourOne * 1 + hourTwo * 3) / 4)
-            } else {
-                return Math.round((hourOne * 1 + hourTwo * 2) / 3)
-            }
-        } else if (minutes < 30) {
-            if (minutes < 15) {
-                return Math.round((hourOne * 3 + hourTwo * 1) / 4)
-            } else {
-                return Math.round((hourOne * 2 + hourTwo * 1) / 3)
-            }
-        } else {
-            return Math.round((hourOne + hourTwo) / 2);
+        return minutes > 30 ?
+            minutes > 45 ?
+                Math.round((one * 1 + two * 3) / 4)
+                : Math.round((one * 1 + two * 2) / 3)
+            : (minutes < 30) ?
+                minutes < 15 ?
+                    Math.round((one * 3 + two * 1) / 4)
+                    : Math.round((one * 2 + two * 1) / 3)
+                : Math.round((one + two) / 2);
+    });
+    const one = data['hourly'][0]
+    const two = data['hourly'][1]
+    class Current {
+        constructor() {
+            this.temp =  average(one['temperature'], two['temperature']);
+            this.precipitation = average(one['probabilityOfPrecipitation']['value'], two['probabilityOfPrecipitation']['value']);
+            this.humidity = average(one['relativeHumidity']['value'], two['relativeHumidity']['value']);
+            this.windSpeed = one['windSpeed'];
+            this.description = one['shortForecast'];
+            this.isDayTime = one['isDaytime'];
+            this.windDirection = one['windDirection'];
+            this.city = data.location['city'];
+            this.state = data.location['state'];
         }
-    };
-};
-
-class Forecast {
-    constructor(data) {
-        this.name = data['name'];
-        this.x = new Date (data['startTime']).getHours();
-        this.time = this.hourly(this.x)
-        this.shortDesc = data[`shortForecast`];
-        this.longDesc = data[`detailedForecast`];
-        this.temp = data['temperature'];
-        this.precipitation = this.rain(data);
-        this.humidity = data['relativeHumidity']['value'];
-        this.windSpeed = data['windSpeed'];
-        this.isDayTime = data['isDaytime'];
-    };
-    hourly(hour) {
-        if (hour === 0) {
-            return `12am`;
-        } else if (hour > 12) {
-            hour = hour - 12;
-            return `${hour}pm`;
-        }else if (hour === 12) {
-            return `12pm`;
-        } else {
-            return `${hour}am`;
-        };
-    };
-    rain(data) {
-        let x = data['probabilityOfPrecipitation']['value'];
-        if (x === null) {
-            return 0;
-        }
-        else {
-            return x
-        }
-    };
-};
-
-class EveryTwelveHourData {
-    constructor(daily) {
-        this.data = daily['properties']['periods']
-        this.list = [];
     }
-    create() {
-        try {
-            let n = 1
-            while (n <= 10) {
-                let x = this.data[n]
-                x = new Forecast(x);
-                this.list.push(x);
-                n++
-            }
-            return this.list
-        } catch (error) {
-            console.log(error);
-        }
-    };
-};
+    return new Current();
+});
 
-class ChartData {
-    constructor(hourly) {
-        this.hourly = hourly
-        this.time = [];
-        this.chart = {
+const forecast = ((data) => {
+    try {
+        const modifyHours = ((hour) => {
+            return hour === 0 ?
+                `12am` : hour > 12 ?
+                    `${hour = hour - 12}pm` : hour === 12 ?
+                        `12pm` : `${hour}am`
+        });
+        const check = ((x) => x === null ? 0 : x);
+        class Forecast {
+            constructor(data) {
+                this.name = data['name'];
+                this.time = modifyHours(new Date(data['startTime']).getHours())
+                this.shortDesc = data[`shortForecast`];
+                this.longDesc = data[`detailedForecast`];
+                this.temp = data['temperature'];
+                this.precipitation = check(data['probabilityOfPrecipitation']['value']);
+                this.humidity = check(data['relativeHumidity']['value']);
+                this.windSpeed = data['windSpeed'];
+                this.isDayTime = data['isDaytime'];
+            };
+        };
+        return new Forecast(data)
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+const everyTwelveHourData = ((data) => {
+    try {
+        const daily = data.daily
+        let list = [];
+        let n = 1
+        while (n <= 10) {
+            list.push(forecast(daily[n]));
+            n++
+        }
+        return list
+    } catch (error) {
+        console.log(error);
+    };
+});
+
+const chartData = ((data) => {
+    try {
+        const hourly = data.hourly
+        let time = [];
+        let chart = {
             temp: {
                 title: 'Temperature',
                 data: []
@@ -116,25 +91,32 @@ class ChartData {
                 title: 'Humidity',
                 data: []
             }
-        }
-    }
-    create() {
-        try {
-            let n = 0
-            while (n < 13) {
-                let info = this.hourly['properties']['periods'][n]
-                let forecast = new Forecast(info);
-                this.time.push(forecast.time);
-                this.chart.temp.data.push(forecast.temp);
-                this.chart.precipitation.data.push(forecast.precipitation);
-                this.chart.humidity.data.push(forecast.humidity);
-                n++
-            }
-            return this;
-        } catch (error) {
-            console.log(error);
         };
+        let n = 0
+        while (n < 13) {
+            let info = hourly[n]
+            let x = forecast(info);
+            time.push(x.time);
+            chart.temp.data.push(x.temp);
+            chart.precipitation.data.push(x.precipitation);
+            chart.humidity.data.push(x.humidity);
+            n++
+        }
+        return {
+            time: time,
+            chart: chart
+        };
+    } catch (error) {
+        console.log(error);
+    };
+});
+
+class Data{
+    constructor(data) {
+        this.current = current(data)
+        this.twelveHour = everyTwelveHourData(data)
+        this.chart = chartData(data)
     }
 };
 
-export { ChartData, EveryTwelveHourData, CurrentData };
+export default Data;

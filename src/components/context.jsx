@@ -4,7 +4,7 @@ import {styles} from '../assets/Themes.mjs';
 export const MobileContext = createContext({});
 export const StyleContext = createContext({})
 
-export const ContextProvider = ((props) => {
+export const GlobalContextProvider = ((props) => {
     const cutOff = 900;
     const [theme, setTheme] = useState('dark')
     const [mobile, setMobile] = useState(window.innerWidth <= cutOff)

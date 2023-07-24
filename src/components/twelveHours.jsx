@@ -1,5 +1,6 @@
 import React, { StrictMode, useState, useEffect, createContext, useContext} from 'react'
 import { StyleContext } from './context';
+import { dataContext } from '../App';
 
 let Forecast = ((props) => {
     const style = useContext(StyleContext)
@@ -15,9 +16,11 @@ let Forecast = ((props) => {
 
 const TwelveHour = ((props) => {
     const style = useContext(StyleContext)
+    const data = useContext(dataContext)
+    const twelveHourData = data.twelveHour
+
     try {
-        const { data } = props;
-        const isDay = data.filter((obj) => obj.isDayTime === true)
+        const isDay = twelveHourData.filter((obj) => obj.isDayTime === true)
         const five = isDay.slice(0, 5)
         let n = 0
         return (
